@@ -15,7 +15,9 @@ const getCatById = (req, res) => {
 
 const postCat = (req, res) => {
   console.log('postCat', req.body);
-  const result = addCat(req.body);
+  console.log('req.file', req.file); // This is the file object from multer
+
+  const result = addCat(req.body, req.file); // Now, req.body includes the filename
   if (result.cat_id) {
     res.status(201);
     res.json({message: 'New cat added.', result});
