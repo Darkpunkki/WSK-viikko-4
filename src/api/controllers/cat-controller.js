@@ -1,11 +1,11 @@
 import {addCat, findCatById, listAllCats} from '../models/cat-model.js';
 
-const getCat = (req, res) => {
-  res.json(listAllCats());
+const getCat = async (req, res) => {
+  res.json(await listAllCats());
 };
 
-const getCatById = (req, res) => {
-  const cat = findCatById(req.params.id);
+const getCatById = async (req, res) => {
+  const cat = await findCatById(req.params.id);
   if (cat) {
     res.json(cat);
   } else {
@@ -13,16 +13,16 @@ const getCatById = (req, res) => {
   }
 };
 
-const postCat = (req, res) => {
-  console.log('postCat', req.body);
-  console.log('req.file', req.file); // This is the file object from multer
+const postCat = async (req, res) => {
+  //console.log('postCat', req.body);
+  //console.log('req.file', req.file);
 
-  const result = addCat(req.body, req.file); // Now, req.body includes the filename
+  const result = await addCat(req.body, req.file);
   if (result.cat_id) {
     res.status(201);
     res.json({message: 'New cat added.', result});
   } else {
-    console.log('Error adding cat.');
+    //console.log('Error adding cat.');
     res.sendStatus(400);
   }
 };

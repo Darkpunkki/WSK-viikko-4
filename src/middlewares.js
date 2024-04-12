@@ -5,7 +5,7 @@ const createThumbnail = (req, res, next) => {
     next();
     return;
   }
-  console.log('req.file in createThumbnail', req.file);
+  //console.log('req.file in createThumbnail', req.file);
   // TODO: use file path to create 160x160 png thumbnail with sharp
   const [fileName, extension] = req.file.filename.split('.');
 

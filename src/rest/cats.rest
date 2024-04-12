@@ -5,11 +5,11 @@ POST http://127.0.0.1:3000/api/v1/cats
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="title"
+Content-Disposition: form-data; name="cat_name"
 
-New cat title
+Miau
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="user_id"
+Content-Disposition: form-data; name="owner"
 
 1
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -17,4 +17,15 @@ Content-Disposition: form-data; name="file"; filename="kaupunki.jpg"
 Content-Type: image/png
 
 < ./city.jpeg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="birthdate"
+
+1989-09-11
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="weight"
+
+20
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+

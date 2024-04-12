@@ -1,6 +1,7 @@
 import express from 'express';
 import catRouter from './routes/cat-router.js';
 import userRouter from './routes/user-router.js';
+import dotenv from 'dotenv';
 
 const router = express.Router();
 router.get('/', (req, res) => {
