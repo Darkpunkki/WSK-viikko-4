@@ -20,27 +20,15 @@ const findCatById = async (id) => {
   return rows[0];
 };
 
-const addCat = async (cat, file) => {
-  const {cat_name, weight, owner, birthdate} = cat;
-  const sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate)
-               VALUES (?, ?, ?, ?, ?)`;
-  console.log('cat', cat);
-  const params = [cat_name, weight || 0, owner, file.filename, birthdate].map(
-    (arvo) => {
-      if (arvo === undefined) {
-        return null;
-      } else {
-        return arvo;
-      }
-    }
-  );
+const addCat = async ({cat_name, weight, owner, birthdate}, filename) => {
+  const sql = `INSERT INTO wsk_cats (cat_name, weight, owner, filename, birthdate) VALUES (?, ?, ?, ?, ?)`;
+  const params = [cat_name, weight, owner, filename, birthdate];
   console.log('params', params);
-  const rows = await promisePool.execute(sql, params);
-  //console.log('rows', rows);
-  if (rows[0].affectedRows === 0) {
+  const [rows] = await promisePool.execute(sql, params);
+  if (rows.affectedRows === 0) {
     return false;
   }
-  return {cat_id: rows[0].insertId};
+  return {cat_id: rows.insertId};
 };
 
 const modifyCat = async (cat, id) => {
@@ -68,33 +56,33 @@ const removeCat = async (id) => {
   return {message: 'success'};
 };
 
-export {listAllCats, findCatById, addCat, modifyCat, removeCat};
-/*
-const listAllCats = () => {
-  return catItems;
+// cat-model.js
+
+const getCatByIdWithOwner = async (catId) => {
+  const sql = `
+    SELECT c.cat_name, c.weight, c.birthdate, u.name AS owner_name
+    FROM wsk_cats c
+    JOIN wsk_users u ON c.owner = u.user_id
+    WHERE c.cat_id = ?;
+  `;
+  const [rows] = await promisePool.execute(sql, [catId]);
+  return rows.length > 0 ? rows[0] : null;
 };
 
-const findCatById = (id) => {
-  return catItems.find((item) => item.cat_id == id);
+const getCatsByUserId = async (userId) => {
+  const sql = `
+      SELECT * FROM wsk_cats WHERE owner = ?
+  `;
+  const [rows] = await promisePool.execute(sql, [userId]);
+  return rows;
 };
 
-const addCat = (cat, file) => {
-  const {cat_name, weight, owner, filename, birthdate} = cat; // Destructuring to get the filename
-  const newId = catItems.length > 0 ? catItems[0].cat_id + 1 : 1; // Ensure there's a fallback for an empty array
-
-  catItems.unshift({
-    cat_id: newId,
-    cat_name,
-    weight,
-    owner: Number(owner),
-    filename,
-    birthdate,
-    file,
-  });
-
-  return {cat_id: newId, file};
+export {
+  getCatsByUserId,
+  getCatByIdWithOwner,
+  addCat,
+  findCatById,
+  listAllCats,
+  modifyCat,
+  removeCat,
 };
-
-
-export {listAllCats, findCatById, addCat};
-*/

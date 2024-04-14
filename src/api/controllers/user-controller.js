@@ -1,11 +1,16 @@
-import {addUser, findUserById, listAllUsers} from '../models/user-model.js';
+import {
+  addUser,
+  findUserById,
+  listAllUsers,
+  modifyUser,
+} from '../models/user-model.js';
 
-const getUsers = (req, res) => {
-  res.json(listAllUsers());
+const getUsers = async (req, res) => {
+  res.json(await listAllUsers());
 };
 
-const getUserById = (req, res) => {
-  const user = findUserById(req.params.id);
+const getUserById = async (req, res) => {
+  const user = await findUserById(req.params.id);
   if (user) {
     res.json(user);
   } else {
@@ -13,8 +18,9 @@ const getUserById = (req, res) => {
   }
 };
 
-const postUser = (req, res) => {
-  const result = addUser(req.body);
+const postUser = async (req, res) => {
+  const {name, username, email, role, password} = req.body;
+  const result = await addUser({name, username, email, role, password});
   if (result.user_id) {
     res.status(201);
     res.json({message: 'New user added.', result});
@@ -24,12 +30,36 @@ const postUser = (req, res) => {
   }
 };
 
-const putUser = (req, res) => {
-  res.json({message: 'User item updated.'});
+const putUser = async (req, res) => {
+  if (
+    res.locals.user_id !== Number(req.params.id) &&
+    res.locals.role !== 'admin'
+  ) {
+    res.sendStatus(403);
+    return;
+  }
+  const result = await modifyUser(req.body, req.params.id);
+  if (!result) {
+    res.status(400);
+    return;
+  }
+  res.json(result);
 };
 
 const deleteUser = (req, res) => {
-  res.json({message: 'User item deleted.'});
+  if (
+    res.locals.user_id !== Number(req.params.id) &&
+    res.locals.role !== 'admin'
+  ) {
+    res.sendStatus(403);
+    return;
+  }
+  const result = removeUser(req.params.id);
+  if (!result) {
+    res.sendStatus(400);
+    return;
+  }
+  res.json(result);
 };
 
 export {getUsers, getUserById, postUser, putUser, deleteUser};

@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  getCatsByOwner,
   getCat,
   getCatById,
   postCat,
@@ -39,7 +40,7 @@ catRouter
   .route('/')
   .get(getCat)
   .post(upload.single('file'), createThumbnail, postCat);
-
+catRouter.get('/by-owner/:userId', getCatsByOwner);
 catRouter.route('/:id').get(getCatById).put(putCat).delete(deleteCat);
 
 export default catRouter;
