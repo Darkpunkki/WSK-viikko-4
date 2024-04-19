@@ -3,6 +3,7 @@ import {
   findUserById,
   listAllUsers,
   modifyUser,
+  removeUser,
 } from '../models/user-model.js';
 import bcrypt from 'bcrypt';
 
@@ -54,20 +55,22 @@ const putUser = async (req, res) => {
   res.json(result);
 };
 
-const deleteUser = (req, res) => {
-  if (
-    res.locals.user_id !== Number(req.params.id) &&
-    res.locals.role !== 'admin'
-  ) {
-    res.sendStatus(403);
-    return;
+const deleteUser = async (req, res) => {
+  console.log(
+    `Logged-in user ID: ${res.locals.user_id}, Role: ${res.locals.role}`
+  );
+  console.log(`Attempting to delete user ID: ${req.params.id}`);
+  try {
+    const result = await removeUser(req.params.id);
+    if (!result) {
+      res.sendStatus(400);
+      return;
+    }
+    res.json(result);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.sendStatus(500);
   }
-  const result = removeUser(req.params.id);
-  if (!result) {
-    res.sendStatus(400);
-    return;
-  }
-  res.json(result);
 };
 
 export {getUsers, getUserById, postUser, putUser, deleteUser};
