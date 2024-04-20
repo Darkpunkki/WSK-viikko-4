@@ -3,6 +3,7 @@ import catRouter from './routes/cat-router.js';
 import userRouter from './routes/user-router.js';
 import tableRouter from './routes/table-router.js';
 import customerRouter from './routes/customer-router.js';
+import reservationRouter from './routes/reservation-router.js';
 import dotenv from 'dotenv';
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.use('/cats', catRouter);
 router.use('/users', userRouter);
 router.use('/tables', tableRouter);
 router.use('/customers', customerRouter);
+router.use('/reservations', reservationRouter);
 
 export default router;

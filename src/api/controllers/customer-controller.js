@@ -86,7 +86,6 @@ const deleteCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
   const {id} = req.params;
   const {customer_name, contact_info} = req.body;
-  console.log('Updating customer:', id, customer_name, contact_info);
   try {
     const result = await modifyCustomer(id, customer_name, contact_info);
     if (result) {

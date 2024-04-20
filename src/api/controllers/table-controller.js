@@ -6,6 +6,7 @@ import {
   removeTable,
   modifyTable,
   listTablesByLocation,
+  getTablesWithStatus,
 } from '../models/table-model.js';
 
 // Function to get all tables
@@ -29,7 +30,7 @@ const getTableWithId = async (req, res) => {
     if (table) {
       res.json(table);
     } else {
-      res.status(404).send({message: 'Table not found'});
+      res.status(404).send({message: 'Table not found asdsa'});
     }
   } catch (err) {
     console.error('Error fetching table by ID:', err);
@@ -127,6 +128,20 @@ const getTablesByLocation = async (req, res) => {
   }
 };
 
+const fetchTablesWithStatus = async (req, res) => {
+  try {
+    const tables = await getTablesWithStatus();
+    console.log('Tables with statuses:', tables);
+    res.json(tables);
+  } catch (error) {
+    console.error('Failed to retrieve tables with statuses:', error);
+    res.status(500).send({
+      message: 'Failed to retrieve tables with statuses',
+      error: error.message,
+    });
+  }
+};
+
 export {
   getAllTables,
   getTableWithId,
@@ -135,4 +150,5 @@ export {
   removeTableById,
   modifyExistingTable,
   getTablesByLocation,
+  fetchTablesWithStatus,
 };

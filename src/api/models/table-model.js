@@ -93,6 +93,23 @@ const listTablesByLocation = async (location) => {
   }
 };
 
+const getTablesWithStatus = async () => {
+  const sql = `
+      SELECT t.table_id, t.capacity, t.location, MAX(r.status) as status
+      FROM tables t
+      LEFT JOIN reservations r ON t.table_id = r.table_id
+      GROUP BY t.table_id, t.capacity, t.location
+      ORDER BY MAX(r.reservation_id) DESC;
+  `;
+  try {
+    const [rows] = await promisePool.query(sql);
+    return rows;
+  } catch (err) {
+    console.error('Error fetching tables with statuses:', err);
+    throw err;
+  }
+};
+
 export {
   listAllTables,
   getTableById,
@@ -101,4 +118,5 @@ export {
   removeTable,
   modifyTable,
   listTablesByLocation,
+  getTablesWithStatus,
 };
