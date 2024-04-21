@@ -53,10 +53,27 @@ const fetchReservationsForTableAndDate = async (tableId, date) => {
   }
 };
 
+const fetchCustomerByReservationId = async (reservationId) => {
+  const query = `
+    SELECT c.customer_id, c.name, c.contact_info
+    FROM customers c
+    JOIN reservations r ON c.customer_id = r.customer_id
+    WHERE r.reservation_id = ?;
+  `;
+  try {
+    const [customer] = await promisePool.execute(query, [reservationId]);
+    return customer.length ? customer[0] : null;
+  } catch (err) {
+    console.error('Error fetching customer by reservation ID:', err);
+    throw err; // Re-throw to handle it in the controller
+  }
+};
+
 export {
   getAllReservations,
   addReservation,
   updateReservation,
   deleteReservation,
   fetchReservationsForTableAndDate,
+  fetchCustomerByReservationId,
 };

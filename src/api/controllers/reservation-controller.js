@@ -4,6 +4,7 @@ import {
   updateReservation as updateReservationModel,
   deleteReservation as deleteReservationModel,
   fetchReservationsForTableAndDate,
+  fetchCustomerByReservationId,
 } from '../models/reservation-model.js';
 
 // Controller to fetch all reservations
@@ -101,10 +102,26 @@ const getReservationsByTableAndDate = async (req, res) => {
   }
 };
 
+const getCustomerByReservationId = async (req, res) => {
+  const reservationId = req.params.reservationId;
+  try {
+    const customer = await fetchCustomerByReservationId(reservationId);
+    if (customer) {
+      res.json(customer);
+    } else {
+      res.status(404).send('Customer not found for this reservation');
+    }
+  } catch (error) {
+    console.error('Failed to fetch customer by reservation ID:', error);
+    res.status(500).send('Error fetching customer details');
+  }
+};
+
 export {
   getAllReservations,
   addReservation,
   updateReservation,
   deleteReservation,
   getReservationsByTableAndDate,
+  getCustomerByReservationId,
 };
